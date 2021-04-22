@@ -1,0 +1,40 @@
+      <html>
+        <head>
+          <title>reCAPTCHA demo: Simple page</title>
+          <script src="https://www.google.com/recaptcha/enterprise.js?render=6Lefk7QaAAAAAJAtX1S7W_redacted"></script>
+
+          <script>
+            grecaptcha.enterprise.ready(function() {
+              console.log("recaptcha initialized");
+            });
+          </script>
+
+          <script>
+            function recaptcha_call() {
+              grecaptcha.enterprise.execute('6Lefk7QaAAAAAJAtX1S7W_redacted', {action: 'homepage'}).then(function(token) {
+                   console.log(token);
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/verifyIdToken');
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    xhr.onreadystatechange = function() {
+                      if (xhr.readyState == XMLHttpRequest.DONE) {
+                        var status = xhr.status;
+                        if (status === 0 || (status >= 200 && status < 400)) {
+                             console.log(xhr.responseText);
+                             document.getElementById("result").innerHTML=xhr.responseText;
+                        } else {
+                             document.getElementById("result").innerHTML=xhr.responseText;
+                        }   
+                      }
+                    }
+                    xhr.send('type=score&token=' + token);
+                });
+              }
+          </script>
+        </head>
+        <body>
+          <button onclick="recaptcha_call()">Click me</button>
+          <br/>
+          <textarea id="result" name="result" type="text" rows="40" cols="150"  style="font-size:12px"  ></textarea>
+        </body>
+      </html>
